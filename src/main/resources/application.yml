@@ -1,0 +1,36 @@
+#springdoc:
+#  api-docs:
+#    path: /v3/swagger-ui.html
+#  swagger-ui:
+#    path: /v3/api-docs
+
+server:
+  port: 8085
+  http2:
+    enabled: true
+
+
+
+app:
+  couchbase:
+    connection-string: couchbase://localhost
+    user-name: Administrator
+    password: password
+    bucketName: notification
+    scopeName: dev
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  jackson:
+    parser:
+      allow-unquoted-control-chars: true
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  webflux:
+    base-path: /api/notification-admin
+
+logging:
+  level:
+    org.springframework.data.couchbase.core: TRACE
