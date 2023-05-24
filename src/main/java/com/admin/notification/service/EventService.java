@@ -4,7 +4,7 @@ import com.admin.notification.exception.NotFoundException;
 import com.admin.notification.exception.ProcessException;
 import com.admin.notification.mapper.EntityMapper;
 import com.admin.notification.mapper.EventMapper;
-import com.admin.notification.mjml.MJMLHTMLProcessor;
+import com.admin.notification.mjml.MJMLRenderService;
 import com.admin.notification.model.*;
 import com.admin.notification.model.document.Event;
 import com.admin.notification.model.document.Payload;
@@ -43,7 +43,7 @@ public class EventService {
     private final PayloadRepository payloadRepository;
     private final EntityMapper entityMapper;
     private final EventMapper eventMapper;
-    private final MJMLHTMLProcessor mjmlhtmlProcessor;
+    private final MJMLRenderService mjmlRenderService;
     private final JSONUtil<TemplateVO> jsonUtil;
 
     public Mono<Event> createEvent(final EventVo eventVo) {
@@ -204,7 +204,7 @@ public class EventService {
         try {
             return payloadRepository.findByEventIdAndTemplateIdAndVersionId(eventId, templateId, versionId).switchIfEmpty(Mono.error(
                     new NotFoundException(PAYLOAD_EXIST_ERROR))).flatMap(payload ->
-                    Mono.just(mjmlhtmlProcessor.process(payload.getBody(), map))
+                    Mono.just(mjmlRenderService.process(payload.getBody(), map))
             );
         } catch (Exception e) {
             throw new ProcessException(e.getMessage());
